@@ -84,3 +84,38 @@ Now that you have eight models, all with the same columns - join them together, 
 * Push and merge into your git repository's main branch.
 
 Enjoy the challenge and good luck!
+
+
+
+## Setting up an environment if using Snowflake and dbt Cloud
+
+### Snowflake
+```sql
+-- drop environment objects if already exist
+drop database if exists wheres_carmen_db;
+drop user if exists wheres_carmen_user;
+drop role if exists wheres_carmen_role;
+drop warehouse if exists wheres_carmen_wh;
+
+-- create environment objects
+create database wheres_carmen_db;
+create role wheres_carmen_role;
+create warehouse wheres_carmen_wh warehouse_size = 'XSMALL';
+create user wheres_carmen_user default_role = wheres_carmen_role default_warehouse = wheres_carmen_wh;
+
+-- grant warehouse to role engineer
+grant usage on warehouse wheres_carmen_wh to role wheres_carmen_role;
+grant operate on warehouse wheres_carmen_wh to role wheres_carmen_role;
+
+-- grant all privileges on db to role engineer
+grant all privileges on database wheres_carmen_db to role wheres_carmen_role;
+
+-- grant engineer role to user trademe
+grant role wheres_carmen_role to user wheres_carmen_user;
+
+-- set a user password
+alter user wheres_carmen_user reset password;
+```
+
+### dbt Cloud
+[Example dbt Cloud environment configuration](./example_dbt_cloud_credentials.png)
