@@ -88,6 +88,8 @@ Enjoy the challenge and good luck!
 
 ## Setting up an environment if using Snowflake and dbt Cloud
 
+> **Optional:** This setup guide is just a suggestion to help you get started if you choose Snowflake + dbt Cloud — it's not a requirement, and you're free to use any database/dbt setup you prefer (see Background above).
+
 ### Snowflake
 ```sql
 -- drop environment objects if already exist
