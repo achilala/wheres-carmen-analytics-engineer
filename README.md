@@ -21,13 +21,12 @@ For this assessment, please build a dbt project that addresses the problem liste
 
 ## Data Sources & Common Model Development
 
-The data is contained in the attached Excel workbook [*carmen_sightings_20220629061307.xlsx*](https://github.com/achilala/wheres-carmen/blob/main/carmen_sightings/carmen_sightings_20220629061307.xlsx). Note the sheets are organized by eight (nearly continential) **regions** - there is an Interpol agency HQ in a city of each region to which the agents report. Each agency HQ uses their own language or dialect to compile their regional reports, but those reports are in [first normal form (1NF)](https://en.wikipedia.org/wiki/First_normal_form). 
+The data is contained in the attached Excel workbook [*carmen_sightings_20220629061307.xlsx*](./carmen_sightings/carmen_sightings_20220629061307.xlsx). Note the sheets are organized by eight (nearly continential) **regions** - there is an Interpol agency HQ in a city of each region to which the agents report. Each agency HQ originally compiled their regional reports using their own language or dialect for column names, but those reports are in [first normal form (1NF)](https://en.wikipedia.org/wiki/First_normal_form). 
 
 > 1. _The first step of your task is to extract data from Excel workbook, treating as initial sources._
 > **HINT:** _CSV exports into `seeds` - whether by Excel or pandas - is a great way to start..._ :eyes:
 
-As seen from the data, agencies are free to name report columns according to their custom - but let's call each "yablaka" an apple! :apple: 
-Each source ought follow a _common data dictionary_ of 
+Originally, agencies were free to name report columns according to their custom - let's call each "yablaka" an apple! :apple: For this exercise, though, each source's columns have already been renamed to a _common data dictionary_ of 
 
 | Column | Description | Type |
 | ------------ | ----------- | -----|
@@ -36,7 +35,7 @@ Each source ought follow a _common data dictionary_ of
 | agent | Name of field agent filing the report | string |
 | date_agent | Date of field agent filing the report | date |
 | city_agent | HQ city where field agent files the report | string |
-| country | Country of sighting | string | 
+| country_code | ISO 3166-1 alpha-2 country code of sighting | string | 
 | city | City of sighting | string |
 | latitude | Latitude of sighting | float |
 | longitude | Longitude of sighting | float |
@@ -45,9 +44,9 @@ Each source ought follow a _common data dictionary_ of
 | has_jacket | Was the perpetrator wearing a jacket? | boolean |
 | behavior | Short description of perpetrator behavior | string |
 
- > `FYI: For Analytics Engineers, the first step has already been completed for you, as we are not testing your Python coding abilities. The extracted CSV files are available in the folder with standardized column names. Therefore, you can skip step 1 and proceed directly to step 2. :thanks:`
+ > `FYI: For Analytics Engineers, the first step has already been completed for you, as we are not testing your Python coding abilities. The extracted CSV files are available in the carmen_sightings/ folder, with column names already matching the data dictionary above. Therefore, you can skip step 1 and proceed directly to step 2. :thanks:`
 
-> 2. _The second step of your task is to create view models that columnarly maps these eight different sources, each into this common data dictionary._ 
+> 2. _The second step of your task is to create a staging view model per source, one for each of the eight regions, applying any type casting or light cleanup needed so each conforms cleanly to the common data dictionary above._ 
 > **HINT:** _You can do this as you wish - via CTE stages, macros, go wild! The end result however must be a view model for each source._ 
 
 Now that you have eight models, all with the same columns - join them together, but with a caveat:
@@ -60,13 +59,13 @@ Now that you have eight models, all with the same columns - join them together, 
 
 * This new schema includes the >1NF model you've just developed, as tables. From this model, it ought be fairly straightforward for you to create analytical view(s) to answer the following questions:
 
-    a. For each month, which agency region is Carmen Sandiego most likely to be found? 
+    a. For each calendar month (i.e. aggregating all Januaries together, all Februaries together, etc. across every year in the data), which agency region has the highest number of sightings?
 
-    b. Also for each month, what is the probability that Ms. Sandiego is armed __AND__ wearing a jacket, but __NOT__ a hat? What general observations about Ms. Sandiego can you make from this? 
+    b. Also for each calendar month, out of all sightings recorded in that month, what proportion show Ms. Sandiego as armed __AND__ wearing a jacket __AND NOT__ wearing a hat? Briefly note any pattern you observe (e.g. seasonality, a trend by region, etc.).
 
-    c. What are the three most occuring behaviors of Ms. Sandiego?
+    c. Across the entire dataset, what are the three most occurring behaviors of Ms. Sandiego?
 
-    d. For each month, what is the probability Ms. Sandiego exhibits one of her three most occurring behaviors?
+    d. For each calendar month, out of all sightings recorded in that month, what proportion exhibit one of the three behaviors identified in question (c)?
 
 > 4. _Create analytical views in your new schema to answer the four above questions. Document your steps and logic in your README.md._
 > **HINT:** _`dbt docs` (and its screenshots) are a great resource!_
